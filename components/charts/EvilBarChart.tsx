@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -141,9 +140,32 @@ function RefLineLabel({ viewBox, value }: RefLineLabelProps) {
   );
 }
 
+interface ChartPoint {
+  month: string;
+  value: number;
+}
+
+// Loose shapes for the recharts render-prop callbacks (recharts' own types
+// for `shape` and `label` are `any`/unhelpful, so we type them ourselves)
+interface BarShapeRenderProps {
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  index?: number;
+}
+
+interface ReferenceLineLabelRenderProps {
+  viewBox?: {
+    x?: number;
+    y?: number;
+    width?: number;
+  };
+}
+
 export function EvilBarChart() {
   const maxEntry = useMemo(() => {
-    return CHART_DATA.reduce(
+    return CHART_DATA.reduce<ChartPoint & { i: number }>(
       (max, d, i) => (d.value > max.value ? { i, ...d } : max),
       { i: 0, ...CHART_DATA[0] }
     );
@@ -275,36 +297,35 @@ export function EvilBarChart() {
               cursor={false}
             />
 
-            <Bar
-              dataKey="value"
-              barSize={28}
-              shape={(props) => (
-                <EvilBarShape
-                  {...(props as EvilBarProps)}
-                  activeIndex={
-                    isHovering
-                      ? activeIndex
-                      : maxEntry.i
-                  }
-                />
-              )}
-            />
+          <Bar
+  dataKey="value"
+  barSize={28}
+  shape={(props: unknown) => {
+    const barProps = props as BarShapeRenderProps;
+    return (
+      <EvilBarShape
+        {...barProps}
+        activeIndex={isHovering ? activeIndex : maxEntry.i}
+      />
+    );
+  }}
+/>
 
-            <ReferenceLine
-              y={springValue}
-              stroke="rgba(24,24,27,0.4)"
-              strokeDasharray="4 3"
-              strokeWidth={1}
-              label={(props) => (
-                <RefLineLabel
-                  viewBox={props.viewBox}
-                  value={
-                    selected?.value ??
-                    maxEntry.value
-                  }
-                />
-              )}
-            />
+<ReferenceLine
+  y={springValue}
+  stroke="rgba(24,24,27,0.4)"
+  strokeDasharray="4 3"
+  strokeWidth={1}
+  label={(props: unknown) => {
+    const labelProps = props as ReferenceLineLabelRenderProps;
+    return (
+      <RefLineLabel
+        viewBox={labelProps.viewBox}
+        value={selected?.value ?? maxEntry.value}
+      />
+    );
+  }}
+/>
           </BarChart>
         </ResponsiveContainer>
       </div>
