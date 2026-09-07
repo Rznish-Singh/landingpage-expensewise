@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -7,7 +8,6 @@ import {
   Tooltip,
   ReferenceLine,
   ResponsiveContainer,
-  type TooltipProps,
 } from "recharts";
 import { useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { CHART_DATA } from "@/lib/data";
@@ -20,22 +20,32 @@ function useSpringNumber(target: number, stiffness = 0.18) {
 
   useEffect(() => {
     currentRef.current = target;
+
     const animate = () => {
       const diff = target - currentRef.current;
+
       if (Math.abs(diff) < 0.5) {
         currentRef.current = target;
         setCurrent(Math.round(target));
         return;
       }
+
       currentRef.current += diff * stiffness;
       setCurrent(Math.round(currentRef.current));
+
       rafRef.current = requestAnimationFrame(animate);
     };
 
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+    }
+
     rafRef.current = requestAnimationFrame(animate);
+
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
     };
   }, [target, stiffness]);
 
@@ -52,14 +62,30 @@ interface EvilBarProps {
   activeIndex: number;
 }
 
-function EvilBarShape({ x = 0, y = 0, width = 0, height = 0, index = 0, activeIndex }: EvilBarProps) {
+function EvilBarShape({
+  x = 0,
+  y = 0,
+  width = 0,
+  height = 0,
+  index = 0,
+  activeIndex,
+}: EvilBarProps) {
   const isActive = index === activeIndex;
   const r = 4;
 
   return (
     <g>
       <path
-        d={`M${x + r},${y} L${x + width - r},${y} Q${x + width},${y} ${x + width},${y + r} L${x + width},${y + height} L${x},${y + height} L${x},${y + r} Q${x},${y} ${x + r},${y} Z`}
+        d={`
+          M${x + r},${y}
+          L${x + width - r},${y}
+          Q${x + width},${y} ${x + width},${y + r}
+          L${x + width},${y + height}
+          L${x},${y + height}
+          L${x},${y + r}
+          Q${x},${y} ${x + r},${y}
+          Z
+        `}
         fill="#0a0a0a"
         fillOpacity={isActive ? 1 : 0.15}
         stroke={isActive ? "rgba(24,24,27,0.3)" : "none"}
@@ -71,15 +97,19 @@ function EvilBarShape({ x = 0, y = 0, width = 0, height = 0, index = 0, activeIn
 }
 
 // Reference line label pill
-function RefLineLabel({
-  viewBox,
-  value,
-}: {
-  viewBox?: { x?: number; y?: number; width?: number };
+interface RefLineLabelProps {
+  viewBox?: {
+    x?: number;
+    y?: number;
+    width?: number;
+  };
   value: number;
-}) {
-  const x = (viewBox?.x ?? 0);
+}
+
+function RefLineLabel({ viewBox, value }: RefLineLabelProps) {
+  const x = viewBox?.x ?? 0;
   const y = viewBox?.y ?? 0;
+
   const label = value.toLocaleString("en-IN");
   const pillW = label.length * 7.5 + 16;
 
@@ -93,6 +123,7 @@ function RefLineLabel({
         rx={4}
         fill="#0a0a0a"
       />
+
       <text
         x={x - pillW / 2 - 4}
         y={y + 4}
@@ -104,6 +135,7 @@ function RefLineLabel({
       >
         {label}
       </text>
+
       <circle cx="99%" cy={y} r={3} fill="#0a0a0a" />
     </g>
   );
@@ -120,12 +152,17 @@ export function EvilBarChart() {
   const [activeIndex, setActiveIndex] = useState<number>(maxEntry.i);
   const [isHovering, setIsHovering] = useState(false);
 
-  const selected = isHovering ? CHART_DATA[activeIndex] : maxEntry;
-  const springValue = useSpringNumber(selected?.value ?? maxEntry.value);
+  const selected = isHovering
+    ? CHART_DATA[activeIndex]
+    : maxEntry;
+
+  const springValue = useSpringNumber(
+    selected?.value ?? maxEntry.value
+  );
 
   const handleMouseMove = useCallback(
     (state: { activeTooltipIndex?: number }) => {
-      if (state?.activeTooltipIndex != null) {
+      if (state.activeTooltipIndex != null) {
         setActiveIndex(state.activeTooltipIndex);
         setIsHovering(true);
       }
@@ -165,6 +202,7 @@ export function EvilBarChart() {
           >
             [spending] monthly
           </div>
+
           <div
             style={{
               fontSize: 32,
@@ -178,6 +216,7 @@ export function EvilBarChart() {
             ₹{springValue.toLocaleString("en-IN")}
           </div>
         </div>
+
         <div style={{ textAlign: "right" }}>
           <div
             style={{
@@ -191,7 +230,16 @@ export function EvilBarChart() {
           >
             [month]
           </div>
-          <div style={{ fontSize: 12, fontWeight: 500, color: "#555550" }}>{displayMonth}</div>
+
+          <div
+            style={{
+              fontSize: 12,
+              fontWeight: 500,
+              color: "#555550",
+            }}
+          >
+            {displayMonth}
+          </div>
         </div>
       </div>
 
@@ -200,7 +248,12 @@ export function EvilBarChart() {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={CHART_DATA}
-            margin={{ left: 44, right: 12, top: 8, bottom: 0 }}
+            margin={{
+              left: 44,
+              right: 12,
+              top: 8,
+              bottom: 0,
+            }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -216,21 +269,40 @@ export function EvilBarChart() {
               }}
               tickMargin={10}
             />
-            <Tooltip content={() => null} cursor={false} />
+
+            <Tooltip
+              content={() => null}
+              cursor={false}
+            />
+
             <Bar
               dataKey="value"
               barSize={28}
-              shape={(props: EvilBarProps) => (
-                <EvilBarShape {...props} activeIndex={isHovering ? activeIndex : maxEntry.i} />
+              shape={(props) => (
+                <EvilBarShape
+                  {...(props as EvilBarProps)}
+                  activeIndex={
+                    isHovering
+                      ? activeIndex
+                      : maxEntry.i
+                  }
+                />
               )}
             />
+
             <ReferenceLine
               y={springValue}
               stroke="rgba(24,24,27,0.4)"
               strokeDasharray="4 3"
               strokeWidth={1}
               label={(props) => (
-                <RefLineLabel viewBox={props.viewBox} value={selected?.value ?? maxEntry.value} />
+                <RefLineLabel
+                  viewBox={props.viewBox}
+                  value={
+                    selected?.value ??
+                    maxEntry.value
+                  }
+                />
               )}
             />
           </BarChart>

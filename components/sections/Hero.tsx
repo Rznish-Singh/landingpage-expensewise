@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowRight, TrendingDown, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
+import link from "next/link";
 
 const STATS = [
   { label: "tracked this month", value: 48240, prefix: "₹", suffix: "" },

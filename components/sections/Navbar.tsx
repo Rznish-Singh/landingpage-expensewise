@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS } from "@/lib/data";
+import Link from "next/Link";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -56,7 +57,7 @@ export function Navbar() {
         }}
       >
         {/* Logo */}
-        <a
+        <Link
           href="/"
           style={{
             fontSize: 17,
@@ -68,7 +69,7 @@ export function Navbar() {
           }}
         >
           ExpenseWise
-        </a>
+        </Link>
 
         {/* Desktop nav — hidden below 769px via CSS class */}
         <nav
@@ -78,7 +79,7 @@ export function Navbar() {
           {NAV_LINKS.map((link) => {
             const active = isActive(link.href);
             return (
-              <a
+              <Link
                 key={link.label}
                 href={link.href}
                 style={{
@@ -107,14 +108,14 @@ export function Navbar() {
                 }}
               >
                 {link.label}
-              </a>
+              </Link>
             );
           })}
         </nav>
 
         {/* Right — Login + hamburger */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-          <a
+          <Link
             href="https://expensewiseaaa.vercel.app/sign-in?redirect_url=https%3A%2F%2Fexpensewiseaaa.vercel.app%2F"
             style={{
               padding: "7px 16px",
@@ -129,7 +130,7 @@ export function Navbar() {
             }}
           >
             Log in
-          </a>
+          </Link>
 
           {/* Hamburger — mobile only */}
           <button
@@ -182,7 +183,7 @@ export function Navbar() {
           {NAV_LINKS.map((link) => {
             const active = isActive(link.href);
             return (
-              <a
+              <Link
                 key={link.label}
                 href={link.href}
                 style={{
@@ -210,7 +211,7 @@ export function Navbar() {
                     }}
                   />
                 )}
-              </a>
+              </Link>
             );
           })}
 
@@ -222,7 +223,7 @@ export function Navbar() {
               borderTop: "0.5px solid #e5e5e0",
             }}
           >
-            <a
+            <Link
               href="https://expensewiseaaa.vercel.app/sign-in?redirect_url=https%3A%2F%2Fexpensewiseaaa.vercel.app%2F"
               style={{
                 display: "block",
@@ -238,7 +239,7 @@ export function Navbar() {
               }}
             >
               Log in
-            </a>
+            </Link>
           </div>
         </nav>
       </div>
