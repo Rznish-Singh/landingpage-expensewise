@@ -112,7 +112,7 @@ export function Hero() {
           Get started free
         </a>
         <a
-          href="#demo"
+          href="https://expensewiseaaa.vercel.app/sign-in?redirect_url=https%3A%2F%2Fexpensewiseaaa.vercel.app%2F"
           style={{
             display: "inline-flex",
             alignItems: "center",
