@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS } from "@/lib/data";
-import Link from "next/Link";
+import Link from "next/link";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
