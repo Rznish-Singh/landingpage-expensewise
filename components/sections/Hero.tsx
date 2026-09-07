@@ -3,7 +3,7 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
-import link from "next/link";
+import Link from "next/link";
 
 const STATS = [
   { label: "tracked this month", value: 48240, prefix: "₹", suffix: "" },
@@ -94,7 +94,7 @@ export function Hero() {
           marginBottom: 56,
         }}
       >
-        <a
+        <Link
           href="#dashboard"
           style={{
             display: "inline-flex",
@@ -111,8 +111,8 @@ export function Hero() {
           }}
         >
           Get started free
-        </a>
-        <a
+        </Link>
+        <Link
           href="https://expensewiseaaa.vercel.app/sign-in?redirect_url=https%3A%2F%2Fexpensewiseaaa.vercel.app%2F"
           style={{
             display: "inline-flex",
@@ -130,7 +130,7 @@ export function Hero() {
           }}
         >
           See live demo <ArrowRight size={14} />
-        </a>
+        </Link>
       </div>
 
       {/* Animated stats row */}
