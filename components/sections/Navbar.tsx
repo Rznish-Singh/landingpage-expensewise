@@ -115,7 +115,7 @@ export function Navbar() {
         {/* Right — Login + hamburger */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
           <a
-            href="http://localhost:3000/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2F"
+            href="https://expensewiseaaa.vercel.app/sign-in?redirect_url=https%3A%2F%2Fexpensewiseaaa.vercel.app%2F"
             style={{
               padding: "7px 16px",
               background: "#0a0a0a",
@@ -223,7 +223,7 @@ export function Navbar() {
             }}
           >
             <a
-              href="/login"
+              href="https://expensewiseaaa.vercel.app/sign-in?redirect_url=https%3A%2F%2Fexpensewiseaaa.vercel.app%2F"
               style={{
                 display: "block",
                 textAlign: "center",
